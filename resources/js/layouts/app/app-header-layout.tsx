@@ -21,7 +21,7 @@ export default function AppHeaderLayout({
                             <Link href="/about">О проекте</Link>
                         </nav>
                         <div className="ml-auto flex items-center gap-3">
-                            <span className="text-red-500">♥️</span>
+                            <Link href="/favorites">♥️</Link>
                             <div className="h-8 w-8 rounded bg-neutral-500" />
                         </div>
                     </div>

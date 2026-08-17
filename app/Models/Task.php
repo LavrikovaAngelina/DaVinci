@@ -31,4 +31,15 @@ class Task extends Model
     { 
         return $this->belongsTo(Tag::class, 'tag_id_3', 'tag_id'); 
     }
+
+    public static function normalizeTagIds(array $tagIds): array
+    {
+        $ids = collect($tagIds)->filter()->unique()->sort()->values()->all();
+
+        return [
+            'tag_id_1' => $ids[0] ?? null,
+            'tag_id_2' => $ids[1] ?? null,
+            'tag_id_3' => $ids[2] ?? null,
+        ];
+    } 
 }

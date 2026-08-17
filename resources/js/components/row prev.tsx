@@ -1,5 +1,3 @@
-
-
 export default function Row({idea, toggleLike}) {
 
     return (

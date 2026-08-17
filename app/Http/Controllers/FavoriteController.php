@@ -26,24 +26,20 @@ class FavoriteController extends Controller
             ]);
 
         return Inertia::render('favorite/index', [
-            'tasks' => $tasks,
+            'ideas' => $tasks,
         ]);
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $data = $request->validate([
             'tag_ids'   => ['required', 'array', 'min:1', 'max:3'],
             'tag_ids.*' => ['integer', 'exists:tags,tag_id'],
         ]);
 
-        $ids = collect($data['tag_ids'])->unique()->sort()->values()->all();
-
         $task = Task::firstOrCreate([
-            'user_id'  => $request->user()->id,
-            'tag_id_1' => $ids[0],
-            'tag_id_2' => $ids[1] ?? null,
-            'tag_id_3' => $ids[2] ?? null,
+            'user_id' => $request->user()->id,
+            ...Task::normalizeTagIds($data['tag_ids']),
         ]);
 
         return response()->json(['task_id' => $task->task_id]);
