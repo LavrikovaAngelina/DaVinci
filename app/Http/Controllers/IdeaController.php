@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Picture;
 
 class IdeaController extends Controller
 {
@@ -32,6 +33,28 @@ class IdeaController extends Controller
             ],
         ]);
     }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'task_id'         => ['required', 'integer', 'exists:tasks,task_id'],
+            'pic_name'        => ['required', 'string', 'max:255'],
+            'pic_description' => ['nullable', 'string'],
+            'image'           => ['required', 'image', 'mimes:jpeg,png,webp', 'max:5120'],
+        ]);
+
+        Picture::create([
+            'user_id'         => $request->user()->id,
+            'task_id'         => $data['task_id'],
+            'pic_name'        => $data['pic_name'],
+            'pic_description' => $data['pic_description'] ?? null,
+            'is_published'    => $data['is_published'] ?? false,
+            'picture_url'     => $request->file('image')->store('works', 'public'),
+        ]);
+
+        return back();
+    }
+
 
     public function test(Request $request)
     {

@@ -15,7 +15,6 @@ export default function WorkModal({ taskId, tags, onClose }: Props) {
         task_id: taskId,
         pic_name: '',
         pic_description: '',
-        is_published: false,
         image: null as File | null,
     });
 
@@ -100,15 +99,6 @@ export default function WorkModal({ taskId, tags, onClose }: Props) {
                         rows={5}
                         className="w-full rounded border border-neutral-300 px-3 py-2"
                     />
-
-                    <label className="flex items-center gap-2 text-sm">
-                        <input
-                            type="checkbox"
-                            checked={data.is_published}
-                            onChange={(e) => setData('is_published', e.target.checked)}
-                        />
-                        Публиковать
-                    </label>
 
                     <div>
                         <p className="mb-2 text-sm text-neutral-500">Выбраны категории</p>

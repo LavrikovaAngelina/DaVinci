@@ -56,6 +56,14 @@ export default function FavoriteIndex({ ideas: initialIdeas }: Props) {
                         />
                     ))}
                 </div>
+
+                {modalTask && (
+                    <WorkModal
+                        taskId={modalTask.task_id}
+                        tags={modalTask.tags}
+                        onClose={() => setModalTask(null)}
+                    />
+                )}
             </main>
         </>
     );
