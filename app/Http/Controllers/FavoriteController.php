@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class FavoriteController extends Controller
-{
 
+{
     public function index(Request $request)
     {
         $tasks = Task::with(['tag1', 'tag2', 'tag3'])
@@ -25,7 +25,7 @@ class FavoriteController extends Controller
                     ->values(),
             ]);
 
-        return Inertia::render('fav/index', [
+        return Inertia::render('favorite/index', [
             'tasks' => $tasks,
         ]);
     }
