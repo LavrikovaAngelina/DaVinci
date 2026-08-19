@@ -59,4 +59,16 @@ class ProfileController extends Controller
 
         return redirect('/');
     }
+
+    public function logout(ProfileDeleteRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
 }

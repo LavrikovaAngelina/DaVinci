@@ -1,8 +1,16 @@
 import type { card } from '@/types/card';
+import {Link} from '@inertiajs/react';
+import { getHueFromString } from '@/components/get-hue';
 
 export function WorkCard({ card }: { card: card }) {
+
     return (
-        <article className="overflow-hidden rounded border border-neutral-200">
+        <Link
+            href={`/picview/${card.id}`}
+            className="block overflow-hidden rounded border border-neutral-200"
+        >
+
+        <article className="overflow-hidden rounded border border-neutral-200" onClick={() => {}}>
             <div className="relative flex h-56 items-center justify-center bg-neutral-400 text-center text-sm text-white">
                 {card.thumbnail ? (
                     <img src={card.thumbnail} alt="" className="h-full w-full object-cover" />
@@ -14,9 +22,10 @@ export function WorkCard({ card }: { card: card }) {
                     {card.tags.map((tag, i) => (
                         <span
                             key={tag}
-                            className={`rounded px-2 py-0.5 text-xs text-white ${
-                                i === 0 ? 'bg-green-600' : 'bg-red-600'
-                            }`}
+                            className={`rounded px-2 py-0.5 text-xs text-white`}
+                            style={{
+                                 backgroundColor: `hsl(${getHueFromString(tag)}, 70%, 60%)`
+                            }}
                         >
                             #{tag}
                         </span>
@@ -33,15 +42,10 @@ export function WorkCard({ card }: { card: card }) {
                         <div className="text-neutral-500">Автор:</div>
                         <div className="font-medium text-blue-600">{card.author}</div>
                     </div>
-                    <div className="ml-auto text-right text-xs text-neutral-500">
-                        <div className="mb-1 flex gap-2">
-                            <span> {card.likes}</span>
-                            <span> {card.dislikes}</span>
-                        </div>
-                        <div>{card.created_at}</div>
-                    </div>
                 </div>
             </div>
         </article>
+
+        </Link>
     );
 }

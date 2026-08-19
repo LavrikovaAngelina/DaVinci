@@ -1,5 +1,5 @@
 import { Form, Head, Link, usePage } from '@inertiajs/react';
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import ProfileController from '@/actions/App/http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
@@ -56,6 +56,24 @@ export default function Profile({
                                 <InputError
                                     className="mt-2"
                                     message={errors.name}
+                                />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="profile_description">Description</Label>
+
+                                <Input
+                                    id="profile_description"
+                                    className="mt-1 block w-full"
+                                    defaultValue={auth.user.profile_description ?? ''}
+                                    name="profile_description"
+                                    autoComplete="off"
+                                    placeholder="Profile description"
+                                />
+
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.profile_description}
                                 />
                             </div>
 

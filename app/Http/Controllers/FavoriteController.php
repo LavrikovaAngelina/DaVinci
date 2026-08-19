@@ -13,6 +13,7 @@ class FavoriteController extends Controller
     {
         $tasks = Task::with(['tag1', 'tag2', 'tag3'])
             ->where('user_id', $request->user()->id)
+            ->where('is_completed', false)
             ->orderByDesc('task_id')
             ->get()
             ->map(fn (Task $task) => [

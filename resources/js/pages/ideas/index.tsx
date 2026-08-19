@@ -1,33 +1,33 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
+import {card} from '@/types/card';
+import {WorkCard} from '@/components/work-card';
 
-type idea = {
-    id: number;
-    description: string;
-    thumbnail: string | null;
-    tags: string[];
-    author: string;
-    likes: number;
-    dislikes: number;
-    created_at: string;
+type picture = {
+    picture_id: number;
+    user_id: number;
+    task_id: number;
+    pic_name: string;
+    pic_description: string | null;
+    picture_url: string;
 };
 
 type Props = {
-    ideas: idea[];
-    filters: { animal?: string; action?: string; material?: string };
-    options: { animals: string[]; actions: string[]; materials: string[] };
+    cards: card[];
+    //  filters: { animal?: string; action?: string; material?: string };
+    //  options: { animals: string[]; actions: string[]; materials: string[] };, filters, options
 };
 
-export default function ideasIndex({ ideas, filters, options }: Props) {
-    const [form, setForm] = useState({
-        animal: filters.animal ?? '',
-        action: filters.action ?? '',
-        material: filters.material ?? '',
-    });
+export default function ideasIndex({ cards }: Props) {
+    // const [form, setForm] = useState({
+    //     animal: filters.animal ?? '',
+    //     action: filters.action ?? '',
+    //     material: filters.material ?? '',
+    // });
 
-    const search = () => {
-        router.get('/ideas', form, { preserveState: true, replace: true });
-    };
+    // const search = () => {
+    //     router.get('/ideas', form, { preserveState: true, replace: true });
+    // };
 
     return (
         <>
@@ -38,7 +38,7 @@ export default function ideasIndex({ ideas, filters, options }: Props) {
                 <main className="mx-auto max-w-6xl px-4 py-6">
                     <h1 className="mb-3 text-lg">Поиск работ</h1>
 
-                    <div className="mb-8 flex flex-wrap gap-3">
+                    {/* <div className="mb-8 flex flex-wrap gap-3">
                         <Select
                             value={form.animal}
                             onChange={(v) => setForm({ ...form, animal: v })}
@@ -63,11 +63,11 @@ export default function ideasIndex({ ideas, filters, options }: Props) {
                         >
                             Вперед!
                         </button>
-                    </div>
+                    </div> */}
 
                     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                        {ideas.map((idea) => (
-                            <WorkCard key={idea.id} idea={idea} />
+                        {cards.map((card) => (
+                            <WorkCard key={card.id} card={card} />
                         ))}
                     </div>
                 </main>
@@ -99,51 +99,5 @@ function Select({
                 </option>
             ))}
         </select>
-    );
-}
-
-function WorkCard({ idea }: { idea: idea }) {
-    return (
-        <article className="overflow-hidden rounded border border-neutral-200">
-            <div className="relative flex h-56 items-center justify-center bg-neutral-400 text-center text-sm text-white">
-                {idea.thumbnail ? (
-                    <img src={idea.thumbnail} alt="" className="h-full w-full object-cover" />
-                ) : (
-                    <span>Миниатюра картинки<br />(thumbnail)</span>
-                )}
-
-                <div className="absolute bottom-2 left-2 flex gap-1">
-                    {idea.tags.map((tag, i) => (
-                        <span
-                            key={tag}
-                            className={`rounded px-2 py-0.5 text-xs text-white ${
-                                i === 0 ? 'bg-green-600' : 'bg-red-600'
-                            }`}
-                        >
-                            #{tag}
-                        </span>
-                    ))}
-                </div>
-            </div>
-
-            <div className="p-3">
-                <p className="mb-3 text-sm text-neutral-600">"{idea.description}"</p>
-
-                <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 shrink-0 rounded bg-neutral-300" />
-                    <div className="text-xs">
-                        <div className="text-neutral-500">Автор:</div>
-                        <div className="font-medium text-blue-600">{idea.author}</div>
-                    </div>
-                    <div className="ml-auto text-right text-xs text-neutral-500">
-                        <div className="mb-1 flex gap-2">
-                            <span>👍 {idea.likes}</span>
-                            <span>👎 {idea.dislikes}</span>
-                        </div>
-                        <div>{idea.created_at}</div>
-                    </div>
-                </div>
-            </div>
-        </article>
     );
 }

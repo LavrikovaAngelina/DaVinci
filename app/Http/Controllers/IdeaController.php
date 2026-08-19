@@ -5,32 +5,39 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Picture;
+use App\Models\Task;
 
 class IdeaController extends Controller
 {
     public function index(Request $request)
     {
-        $ideas = collect(range(1, 6))->map(fn ($i) => [
-            'id' => $i,
-            'description' => 'Здесь краткое описание автора работы',
-            'thumbnail' => null,
-            'tags' => ['Кошка', 'Плывет', 'Пластик'],
-            'author' => 'Ангелина Л.',
-            'likes' => 12,
-            'dislikes' => 2,
-            'created_at' => '3 дня назад',
-        ]);
+        $cards = Picture::with([
+            'user',
+            'task.tag1',
+            'task.tag2',
+            'task.tag3',
+        ])
+            ->orderByDesc('picture_id')
+            ->get()
+            ->map(fn (Picture $picture) => [
+                'id' => $picture->picture_id,
+                'description' => $picture->pic_name,
+                'thumbnail' => $picture->image_url,
+                'tags' => collect([
+                    $picture->task?->tag1,
+                    $picture->task?->tag2,
+                    $picture->task?->tag3,
+                ])
+                    ->filter()
+                    ->map(fn ($tag) => $tag->tag_name)
+                    ->values()
+                    ->all(),
+
+                'author' => $picture->user?->name ?? 'Неизвестный пользователь',
+            ]);
 
         return Inertia::render('ideas/index', [
-            'ideas'   => $ideas,
-            'filters' => $request->only(['animal', 'action', 'material', 'plants']),
-            'options' => [
-                'animals'   => ['Кошка', 'Собака', 'Птица'],
-                'actions'   => ['Плывет', 'Бежит', 'Спит'],
-                'materials' => ['Пластик', 'Дерево', 'Металл'],
-                'plants' => ['Дуб', 'Ромашка', 'Кактус'],
-
-            ],
+            'cards' => $cards,
         ]);
     }
 
@@ -48,38 +55,13 @@ class IdeaController extends Controller
             'task_id'         => $data['task_id'],
             'pic_name'        => $data['pic_name'],
             'pic_description' => $data['pic_description'] ?? null,
-            'is_published'    => $data['is_published'] ?? false,
             'picture_url'     => $request->file('image')->store('works', 'public'),
         ]);
 
+        Task::where('task_id', $data['task_id'])
+        ->where('user_id', $request->user()->id)
+        ->update(['is_completed' => true]);
+
         return back();
     }
-
-
-    public function test(Request $request)
-    {
-        $cards = collect(range(1, 6))->map(fn ($i) => [
-            'id' => $i,
-            'description' => 'Здесь краткое описание автора работы',
-            'thumbnail' => null,
-            'tags' => ['Кошка', 'Плывет', 'Пластик'],
-            'author' => 'Ангелина Л.',
-            'likes' => 12,
-            'dislikes' => 2,
-            'created_at' => '3 дня назад',
-        ]);
-
-        return Inertia::render('ideas/test', [
-            'cards'   => $cards,
-            'filters' => $request->only(['animal', 'action', 'material']),
-            'options' => [
-                'animals'   => ['Кошка', 'Собака', 'Птица'],
-                'actions'   => ['Плывет', 'Бежит', 'Спит'],
-                'materials' => ['Пластик', 'Дерево', 'Металл'],
-
-                #Переделать поиск (придумать как)
-            ],
-        ]);
-    }
-
 }
