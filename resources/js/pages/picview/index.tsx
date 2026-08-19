@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import { csrf } from '@/lib/csrf';
 import { getHueFromString } from '@/components/get-hue';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import confetti from "@hiseb/confetti";
+import EditModal from '@/components/edit-modal';
 
 type Props = {
     picture: {
@@ -24,42 +25,44 @@ type Props = {
 export default function PicView({ picture }: Props) {
     const [liked, setLiked] = useState(picture.favorite_task_id !== null);
     const [favoriteTaskId, setFavoriteTaskId] = useState<number | null>(picture.favorite_task_id);
+    const [editPicture, setEditPicture] = useState<Props['picture'] | null>(null);    
 
-const onToggleLike = async () => {
-    if (favoriteTaskId !== null) {
-        await fetch(`/favorites/${favoriteTaskId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': csrf(),
-                Accept: 'application/json',
-            },
-        });
+    const onToggleLike = async () => {
+        if (favoriteTaskId !== null) {
+            await fetch(`/favorites/${favoriteTaskId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrf(),
+                    Accept: 'application/json',
+                },
+            });
 
-        setLiked(false);
-        setFavoriteTaskId(null);
-    } else {
-        const response = await fetch('/favorites', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrf(),
-                Accept: 'application/json',
-            },
-            body: JSON.stringify({
-                tag_ids: picture.tag_ids,
-            }),
-        });
+            setLiked(false);
+            setFavoriteTaskId(null);
+        } else {
+            const response = await fetch('/favorites', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf(),
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({
+                    tag_ids: picture.tag_ids,
+                }),
+            });
 
-        const data = await response.json();
+            const data = await response.json();
 
-        setLiked(true);
-        setFavoriteTaskId(data.task_id);
-    }
+            setLiked(true);
+            setFavoriteTaskId(data.task_id);
+        }
 
-    router.reload({ only: ['likesCount'] });
-};
+        router.reload({ only: ['likesCount'] });
+    };
 
-const ClickClick = picture.is_completed ? () => confetti() : onToggleLike;
+    const ClickClick = picture.is_completed ? () => confetti() : onToggleLike;
+    const { auth } = usePage().props;
 
     return (
         <>
@@ -71,7 +74,7 @@ const ClickClick = picture.is_completed ? () => confetti() : onToggleLike;
                         
                         {/* Левая часть — изображение */}
                         <div>
-                            <div className="flex w-[540px] items-center justify-center overflow-hidden rounded border border-neutral-200 bg-neutral-400">
+                            <div className="flex items-center justify-center overflow-hidden rounded border border-neutral-200 bg-neutral-400">
                                 {picture.image ? (
                                     <img
                                         src={picture.image}
@@ -89,9 +92,17 @@ const ClickClick = picture.is_completed ? () => confetti() : onToggleLike;
 
                             <Link href={`/profile/${picture.author_id}`}>
                                 <div className="mt-5 flex items-center gap-3">
-                                    {/* Пока просто место под аватар */}
-                                    <div className="h-14 w-14 shrink-0 rounded border border-neutral-400 bg-white" />
 
+                                    {auth.user.userpic ? (
+                                        <img
+                                            src={`/storage/${auth.user.userpic}`}
+                                            alt="Аватар"
+                                            className="h-8 rounded object-cover w-8"
+                                        />
+                                    ) : (
+                                        <div className="h-8 w-8 rounde bg-neutral-500" />
+                                    )}
+                                    {/* Пока просто место под аватар */}
                                     <div>
                                         <div className="text-sm text-neutral-500">
                                             Автор:
@@ -135,7 +146,7 @@ const ClickClick = picture.is_completed ? () => confetti() : onToggleLike;
                                 ))}
                             </div>
 
-                            <button onClick={ClickClick} className="text-2xl mt-4 h-12 justify-center w-16 flex items-center gap-2 
+                            <button onClick={ClickClick} className="mx-auto text-2xl mt-4 h-12 justify-center w-16 flex items-center gap-2 
                                 rounded-lg border border-neutral-300 bg-white px-4 py-2 font-medium text-neutral-700 shadow-sm 
                                 hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                 {liked ? (
@@ -144,10 +155,28 @@ const ClickClick = picture.is_completed ? () => confetti() : onToggleLike;
                                     <span className="text-neutral-300">🤍</span>
                                 )}
                             </button>
+
+
+
+                            {auth.user.id === picture.author_id && (
+                                <button
+                                    onClick={() => setEditPicture(picture)}
+                                    className="mx-auto mt-4 flex h-12 w-16 items-center justify-center gap-2 rounded-lg border border-neutral-300 bg-white px-4 py-2 text-2xl font-medium text-neutral-700 shadow-sm hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                >
+                                    🖊️
+                                </button>
+                            )}
                             
                         </div>
 
                     </div>
+
+                    {editPicture && (
+                        <EditModal
+                            picture={editPicture}
+                            onClose={() => setEditPicture(null)}
+                        />
+                    )}
                 </main>
             </div>
         </>

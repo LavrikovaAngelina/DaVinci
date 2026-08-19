@@ -2,10 +2,9 @@ import { AppContent } from '@/components/app-content';
 import { AppHeader } from '@/components/app-header';
 import { AppShell } from '@/components/app-shell';
 import type { AppLayoutProps } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
 import { logout } from '@/routes';
-import { router } from '@inertiajs/react';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 
 
@@ -15,6 +14,9 @@ export default function AppHeaderLayout({
     breadcrumbs,
 }: AppLayoutProps) {
     const cleanup = useMobileNavigation();
+    const { auth } = usePage().props;
+
+
 
     const handleLogout = () => {
             cleanup();
@@ -34,7 +36,7 @@ export default function AppHeaderLayout({
                             <Link href="/favorites">♥️</Link>
                             <Link href="/settings">⚙️</Link>
                             <Link
-                                className="block w-full cursor-pointer h-10 w-20"
+                                className="block cursor-pointer h-8 w-8"
                                 href={logout()}
                                 as="button"
                                 onClick={handleLogout}
@@ -43,7 +45,15 @@ export default function AppHeaderLayout({
                                 <LogOut className="mr-2" />
                             </Link>
                             <Link href="/profile">
-                                <div className="h-8 w-8 rounded bg-neutral-500" />
+                                {auth.user.userpic ? (
+                                    <img
+                                        src={`/storage/${auth.user.userpic}`}
+                                        alt="Аватар"
+                                        className="h-8 rounded object-cover w-8"
+                                    />
+                                ) : (
+                                    <div className="h-8 w-8 rounded bg-neutral-500" />
+                                )}
                             </Link>
                         </div>
                     </div>

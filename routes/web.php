@@ -9,8 +9,7 @@ use App\Http\Controllers\PicViewController;
 use App\Http\Controllers\ProfileController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-
+    Route::inertia('/', 'dashboard')->name('dashboard');
     Route::post('/pictures', [IdeaController::class, 'store'])->name('pictures.store');
 
     Route::get('/generator', [GeneratorController::class, 'index'])->name('generator.index');
@@ -25,6 +24,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/profile/{id}', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile', [ProfileController::class, 'my_page'])->name('profile.my_page');
+    Route::put('/pictures/{picture}', [ProfileController::class, 'update'])->name('pictures.update');
+    Route::delete('/pictures/{picture}', [ProfileController::class, 'destroy'])->name('pictures.destroy');
 });
 
 Route::get('/', [IdeaController::class, 'index'])->name('home');

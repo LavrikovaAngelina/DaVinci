@@ -8,12 +8,11 @@ type Props = {
     username: string;
     description: string | null;
     cards: card[];
+    userpic: string | null;
 };
 
-export default function ProfileIndex({username, description, cards, onClose}: Props) {
-    
-    
-    
+export default function ProfileIndex({username, description, cards, userpic}: Props) {
+    console.log('userpic:', userpic);
     return (
         <>
             <Head title={username} />
@@ -22,12 +21,17 @@ export default function ProfileIndex({username, description, cards, onClose}: Pr
                 {/* Профиль */}
                 <div className="px-5 pt-5">
                     <div className="flex items-center gap-3">
-                        {/* Плейсхолдер аватарки */}
-                        <button
-                            className="flex h-[76px] w-[76px] shrink-0 items-center justify-center border border-neutral-500 bg-white text-center text-xs text-neutral-500"
-                        >
-                            Аватарка!
-                        </button>
+                        {userpic ? (
+                            <img
+                                src={`/storage/${userpic}`}
+                                alt="Аватар пользователя"
+                                className="h-[76px] w-[76px] shrink-0 object-cover rounded"
+                            />
+                        ) : (
+                            <div className="flex h-[76px] w-[76px] shrink-0 items-center rounded justify-center border border-neutral-500 bg-white text-center text-xs text-neutral-500">
+                                Аватарка!
+                            </div>
+                        )}
 
                         <h1 className="text-lg font-semibold">
                             {username || 'Пользователь без имени'}
