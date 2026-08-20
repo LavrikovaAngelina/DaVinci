@@ -35,7 +35,7 @@ export function WorkCard({ card }: { card: card }) {
             </div>
 
             <div className="p-3">
-                <p className="mb-3 text-sm text-neutral-600">"{card.description}"</p>
+                <p className="mb-3 text-sm text-neutral-600">{card.description}</p>
 
                 <div className="flex items-center gap-2">
                     {card.userpic ? (
@@ -45,7 +45,7 @@ export function WorkCard({ card }: { card: card }) {
                             className="h-8 rounded object-cover w-8"
                         />
                     ) : (
-                        <div className="h-8 w-8 rounde bg-neutral-500" />
+                        <div className="h-4 w-4 rounde bg-neutral-500" />
                     )}                    
                     <div className="text-xs">
                         <div className="text-neutral-500">Автор:</div>

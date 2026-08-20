@@ -32,8 +32,10 @@ class IdeaController extends Controller
                     ->map(fn ($tag) => $tag->tag_name)
                     ->values()
                     ->all(),
-
+                
                 'author' => $picture->user?->name ?? 'Неизвестный пользователь',
+                'userpic' => $picture->user?->userpic,
+                'author_id' => $picture->user?->id,
             ]);
 
         return Inertia::render('ideas/index', [

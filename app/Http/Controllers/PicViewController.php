@@ -28,6 +28,7 @@ class PicViewController extends Controller
             ->filter()
             ->values()
             ->all();
+        
 
         $favoriteTask = Task::where('user_id', $request->user()->id)
                 ->where('tag_id_1', $tagIds[0] ?? null)
@@ -49,6 +50,7 @@ class PicViewController extends Controller
             'image' => $picture->image_url,
             'author' => $picture->user?->name ?? 'Неизвестный пользователь',
             'author_id' => $picture->user?->id,
+            'userpic' => $picture->user?->userpic ?? null,
 
             'tags' => collect([
                 $picture->task?->tag1,

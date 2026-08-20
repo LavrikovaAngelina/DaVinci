@@ -33,29 +33,38 @@ export default function AppHeaderLayout({
                             <Link href="/about">О проекте</Link>
                         </nav>
                         <div className="ml-auto flex items-center gap-3">
-                            <Link href="/favorites">♥️</Link>
-                            <Link href="/settings">⚙️</Link>
-                            <Link
-                                className="block cursor-pointer h-8 w-8"
-                                href={logout()}
-                                as="button"
-                                onClick={handleLogout}
-                                data-test="logout-button"
-                            >
-                                <LogOut className="mr-2" />
+                        {auth.user ? (
+                            <>
+
+                                <Link href="/favorites">♥️</Link>
+                                <Link href="/settings">⚙️</Link>
+                                <Link
+                                    className="block cursor-pointer h-8 w-8"
+                                    href={logout()}
+                                    as="button"
+                                    onClick={handleLogout}
+                                    data-test="logout-button"
+                                >
+                                    <LogOut className="mr-2" />
+                                </Link>
+                                <Link href="/profile">
+                                    {auth.user.userpic ? (
+                                        <img
+                                            src={`/storage/${auth.user.userpic}`}
+                                            alt="Аватар"
+                                            className="h-8 rounded object-cover w-8"
+                                        />
+                                    ) : (
+                                        <div className="h-8 w-8 rounded bg-neutral-500" />
+                                    )}
+                                </Link>
+                            </>
+                        ) : (
+                            <Link href="/login" className="text-sm">
+                                Войти
                             </Link>
-                            <Link href="/profile">
-                                {auth.user.userpic ? (
-                                    <img
-                                        src={`/storage/${auth.user.userpic}`}
-                                        alt="Аватар"
-                                        className="h-8 rounded object-cover w-8"
-                                    />
-                                ) : (
-                                    <div className="h-8 w-8 rounded bg-neutral-500" />
-                                )}
-                            </Link>
-                        </div>
+                        )}
+                    </div>
                     </div>
                 </header>
             

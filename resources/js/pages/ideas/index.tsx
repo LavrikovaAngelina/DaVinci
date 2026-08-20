@@ -36,7 +36,7 @@ export default function ideasIndex({ cards }: Props) {
             <div className="min-h-screen bg-white">
 
                 <main className="mx-auto max-w-6xl px-4 py-6">
-                    <h1 className="mb-3 text-lg">Поиск работ</h1>
+                     {/* <h1 className="mb-3 text-lg">Поиск работ</h1> */}
 
                     {/* <div className="mb-8 flex flex-wrap gap-3">
                         <Select

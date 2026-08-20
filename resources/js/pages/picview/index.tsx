@@ -15,6 +15,7 @@ type Props = {
         image: string;
         author: string;
         author_id:number;
+        userpic: string | null;
         tags: string[];
         tag_ids: number[];
         favorite_task_id: number | null;
@@ -93,16 +94,15 @@ export default function PicView({ picture }: Props) {
                             <Link href={`/profile/${picture.author_id}`}>
                                 <div className="mt-5 flex items-center gap-3">
 
-                                    {auth.user.userpic ? (
+                                    {picture.userpic ? (
                                         <img
-                                            src={`/storage/${auth.user.userpic}`}
+                                            src={`/storage/${picture.userpic}`}
                                             alt="Аватар"
                                             className="h-8 rounded object-cover w-8"
                                         />
                                     ) : (
                                         <div className="h-8 w-8 rounde bg-neutral-500" />
                                     )}
-                                    {/* Пока просто место под аватар */}
                                     <div>
                                         <div className="text-sm text-neutral-500">
                                             Автор:
@@ -146,7 +146,8 @@ export default function PicView({ picture }: Props) {
                                 ))}
                             </div>
 
-                            <button onClick={ClickClick} className="mx-auto text-2xl mt-4 h-12 justify-center w-16 flex items-center gap-2 
+                            {auth.user.id !== picture.author_id && (
+                                <button onClick={ClickClick} className="mx-auto text-2xl mt-4 h-12 justify-center w-16 flex items-center gap-2 
                                 rounded-lg border border-neutral-300 bg-white px-4 py-2 font-medium text-neutral-700 shadow-sm 
                                 hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                 {liked ? (
@@ -155,8 +156,7 @@ export default function PicView({ picture }: Props) {
                                     <span className="text-neutral-300">🤍</span>
                                 )}
                             </button>
-
-
+                            )}
 
                             {auth.user.id === picture.author_id && (
                                 <button

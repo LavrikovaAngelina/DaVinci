@@ -9,7 +9,6 @@ use App\Http\Controllers\PicViewController;
 use App\Http\Controllers\ProfileController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('/', 'dashboard')->name('dashboard');
     Route::post('/pictures', [IdeaController::class, 'store'])->name('pictures.store');
 
     Route::get('/generator', [GeneratorController::class, 'index'])->name('generator.index');

@@ -69,7 +69,9 @@ class ProfileController extends Controller
                     ->values()
                     ->all(),
 
-                'author' => $picture->user?->name ?? 'Неизвестный пользователь',
+                    'author' => $picture->user?->name ?? 'Неизвестный пользователь',
+                    'userpic' => $picture->user?->userpic,
+                    'author_id' => $picture->user?->id,
                 ];
             });
 

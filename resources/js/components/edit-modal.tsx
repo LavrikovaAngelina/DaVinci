@@ -1,5 +1,5 @@
 import { router, useForm } from '@inertiajs/react';
-
+import { getHueFromString } from '@/components/get-hue';
 
 type Props = {
     picture: {
@@ -113,7 +113,10 @@ export default function EditWorkModal({ picture, onClose }: Props) {
                             {picture.tags.map((tag) => (
                                 <span
                                     key={tag}
-                                    className="rounded px-3 py-1.5 text-base font-medium"
+                                    className="rounded text-white px-3 py-1.5 text-base font-medium"
+                                    style={{
+                                        backgroundColor: `hsl(${getHueFromString(tag)}, 70%, 60%)`
+                                    }}
                                 >
                                     #{tag}
                                 </span>

@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import { getHueFromString } from '@/components/get-hue';
 
 type Props = {
     taskId: number;
@@ -106,7 +107,10 @@ export default function WorkModal({ taskId, tags, onClose }: Props) {
                             {tags.map((tag, i) => (
                                 <span
                                     key={tag}
-                                    className={`rounded px-3 py-1.5 text-base font-medium`}
+                                    className={`rounded text-white px-3 py-1.5 text-base font-medium`}
+                                    style={{
+                                        backgroundColor: `hsl(${getHueFromString(tag)}, 70%, 60%)`
+                                    }}
                                 >
                                     #{tag}
                                 </span>
